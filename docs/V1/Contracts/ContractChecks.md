@@ -26,6 +26,15 @@ namespace GanbaroDigital\Contracts\V1\Contracts;
 class ContractChecks
 {
     /**
+     * reset contract checking to its default state
+     *
+     * this has been added for unit testing purposes
+     * 
+     * @return void
+     */
+    public static function resetToDefaults();
+
+    /**
      * are contract checks currently enabled?
      *
      * @return boolean
@@ -83,6 +92,7 @@ Here is the contract for this class:
 
     GanbaroDigital\Contracts\V1\Contracts\ContractChecks
      [x] Contract checks are enabled by default
+     [x] Can reset to defaults
      [x] Can enable contract checks
      [x] Can disable contract checks
      [x] Can check if contract checks are enabled

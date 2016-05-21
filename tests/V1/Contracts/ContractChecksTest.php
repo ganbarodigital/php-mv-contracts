@@ -61,8 +61,31 @@ class ContractChecksTest extends PHPUnit_Framework_TestCase
         // ----------------------------------------------------------------
         // setup your test
 
+        ContractChecks::resetToDefaults();
+
         // ----------------------------------------------------------------
         // perform the change
+
+        // ----------------------------------------------------------------
+        // test the results
+
+        $this->assertTrue(ContractChecks::areEnabled());
+    }
+
+    /**
+     * @covers ::resetToDefaults
+     */
+    public function testCanResetToDefaults()
+    {
+        // ----------------------------------------------------------------
+        // setup your test
+
+        ContractChecks::disable();
+
+        // ----------------------------------------------------------------
+        // perform the change
+
+        ContractChecks::resetToDefaults();
 
         // ----------------------------------------------------------------
         // test the results

@@ -53,6 +53,18 @@ class ContractChecks
     private static $areEnabled = true;
 
     /**
+     * reset contract checking to its default state
+     *
+     * this has been added for unit testing purposes
+     *
+     * @return void
+     */
+    public static function resetToDefaults()
+    {
+        self::$areEnabled = true;
+    }
+
+    /**
      * are contract checks currently enabled?
      *
      * @return boolean
