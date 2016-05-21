@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <!--[if lt IE 9]>
+            <script src="assets/html5shiv.js"></script>
+            <script src="assets/html5printshiv.js"></script>
+        <![endif]-->
+        <meta charset="utf-8"/>
+        <title>Contracts Library for PHP from Ganbaro Digital</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="http://ganbarodigital.github.io/php-mv-contracts/assets/docs.css" rel="stylesheet"/>
+        <link rel="stylesheet" href="http://ganbarodigital.github.io/php-mv-contracts/assets/prism.css">
+        <script src="http://ganbarodigital.github.io/php-mv-contracts/assets/prism.js"></script>
+    </head>
+    <body data-ishi-anchors="1">
+        <header role="banner">
+            <div>
+                <p style="font-size: 34px; padding-top: 10px">Contracts Library for PHP</p>
+                <p style="font-size: 18px; border-bottom: 1px solid; padding-bottom: 10px">Prove the correctness of your code</p>
+            </div>
+            <!--<a href="http://ganbarodigital.github.io/php-mv-contracts/index.html">
+                <img src="http://ganbarodigital.github.io/php-mv-contracts/assets/ganbarodigital.svg" width="60" height="60" style="vertical-align: middle; float: left; margin-right: 15px">
+            </a>-->
+            <nav class="navbar topbar">
+                <ul>
+                                            <li class="">
+                            <a class="" href="http://ganbarodigital.github.io/php-mv-contracts/index.html">Overview</a>
+                        </li>
+                                            <li class="current">
+                            <a class="current" href="http://ganbarodigital.github.io/php-mv-contracts/V1/index.html">Version 1.x</a>
+                        </li>
+                                    </ul>
+            </nav>
+        </header>
+                                                                            <header role="subnav">
+                        <nav class="navbar">
+                            <ul>
+                                                                    <li class="current">
+                                        <a class="current" href="http://ganbarodigital.github.io/php-mv-contracts/V1/index.html">Introduction</a>
+                                    </li>
+                                                                    <li class="">
+                                        <a class="" href="http://ganbarodigital.github.io/php-mv-contracts/V1/Contracts/index.html">Contracts</a>
+                                    </li>
+                                                                    <li class="">
+                                        <a class="" href="http://ganbarodigital.github.io/php-mv-contracts/V1/Exceptions/index.html">Exceptions</a>
+                                    </li>
+                                                            </ul>
+                        </nav>
+                    </header>
+                                            <main role="main">
+                        <nav class="pageflow">
+              <ul>
+                                    <li><a href="index.html">Prev: V1 Overview</a></li>
+                                                      <li></li>
+                                </ul>
+            </nav>
+            
+            <article>
+                <h1 id="programming-by-contract">Programming By Contract</h1>
+<h2 id="what-is-programming-by-contract">What Is Programming By Contract?</h2>
+<p><em>Programming by contract</em> is a <em>correctness</em> approach built on a 3-step scientific process:</p>
+<ol>
+<li><strong>require</strong> that all pre-conditions are met</li>
+<li><strong>do</strong> the work</li>
+<li><strong>ensure</strong> that all post-conditions are met</li>
+</ol>
+<p><em>Pre-conditions</em> and <em>post-conditions</em> can include:</p>
+<ul>
+<li>input parameter validation</li>
+<li>return value validation</li>
+<li>checking that expected side effects have occurred</li>
+<li>checking that invariants haven't changed</li>
+</ul>
+<p>Checks can also be made whilst the module / function / method is doing the work.</p>
+<h2 id="why-is-programming-by-contract-a-good-idea">Why Is Programming By Contract A Good Idea?</h2>
+<p><em>Programming by contract</em> builds <strong>proven correctness</strong> into the code that you ship:</p>
+<ul>
+<li>the method <em>requires that</em> certain things (pre-conditions) are true before you call the method,</li>
+<li>when the method returns, the method <em>ensures that</em> certain things (post-conditions) are true</li>
+<li>if the method cannot guarantee that the post-conditions are met, it throws an exception</li>
+</ul>
+<p>This approach catches errors in your code as early as possible.</p>
+<div class="callout info">
+The greater the distance between when an error occurred and where an error is detected, the harder it is to correctly identify the real cause of the error.
+</div>
+<p><em>Programming by contract</em> moves responsibility for correctness from your unit tests and into the code that you ship. This makes it a lot easier for other developers to know that they're using your code safely.</p>
+<div class="callout info">
+<p>With <em>programming by contract</em>, unit tests become responsible for exercising the code and documenting all of the features and functionality that your code provides.</p>
+</div>
+<div class="callout info">
+<p>With <em>programming by contract</em>, your correctness tests are also there when your code goes through functional and non-functional testing. That's something you can't get by placing the burden of proof on your unit tests alone.</p>
+</div>
+<h2 id="why-is-programming-by-contract-different-from-input-validation">Why Is Programming By Contract Different From Input Validation?</h2>
+<p>Most widely-used robustness approaches focus primarily on validating inputs. This is often driven by security concerns (preventing data breaches, preventing the host being compromised, preventing denial-of-service). These are all important activities, but they are examples of <em>non-functional requirements</em>.</p>
+<p><strong>They're not driven by ensuring that the delivered code actually works.</strong></p>
+<h3 id="separating-robustness-from-correctness">Separating Robustness From Correctness</h3>
+<p>Separate out the expectations and guarantees into two distinct layers:</p>
+<ul>
+<li>variable types (robustness)</li>
+<li>application state / business rules met (correctness)</li>
+</ul>
+<p>Use PHP's type-checking support to perform robustness checks. PHP 7 is a major step forward in this area. Use inspection / reflection libraries like our own <a href="https://ganbarodigital.github.io/php-mv-reflection/">Reflection Library</a> to plug gaps in what the language can check. Implement robustness checks on every <code>public</code> method.</p>
+<h2 id="what-contracts-to-define-and-where">What Contracts To Define And Where</h2>
+<p>Limit your correctness checks to the context where the contract is being enforced. For example, an API library should not attempt to enforce any contract about business logic.</p>
+<table>
+<thead>
+<tr>
+<th>Code Type</th>
+<th>Robustness?</th>
+<th>Correctness?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Library</td>
+<td>Yes</td>
+<td>Library state only</td>
+</tr>
+<tr>
+<td>Framework</td>
+<td>Yes</td>
+<td>Framework state only</td>
+</tr>
+<tr>
+<td>Controllers</td>
+<td>Yes</td>
+<td>Application route only</td>
+</tr>
+<tr>
+<td>Business Logic</td>
+<td>Yes</td>
+<td>Business rules only</td>
+</tr>
+<tr>
+<td>Data Layer</td>
+<td>Yes</td>
+<td>Data integrity only</td>
+</tr>
+<tr>
+<td>Views</td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+</tbody>
+</table>
+<p>If you add contracts that check things they have no business knowing about, you'll find that the contracts get in the way of reusing your code. Getting the balance right takes time and experience.</p>
+<h2 id="meeting-expectations">Meeting Expectations</h2>
+<p>Use the <code>Contracts</code> class to check pre-conditions and post-conditions:</p>
+<pre><code class="language-php">use GanbaroDigital\Contracts\V1\Contracts;
+
+function cancelDirectDebit(DirectDebit $mandate)
+{
+    // correctness!
+    Contracts::requireThat(function() use ($mandate) {
+        Contracts::assertValue($mandate, !$mandate-&gt;isCancelled(), "mandate is already cancelled");
+    });
+
+    // cancel the mandate here
+    //
+    // it isn't the API client's role to check whether or not a mandate should
+    // be cancelled ... it's just going to pass through the details to the
+    // remote API
+    $this-&gt;apiClient-&gt;cancelMandate($mandate);
+
+    // correctness!
+    Contracts::ensureThat(function() use ($mandate) {
+        Contracts::assertValue($mandate, $mandate-&gt;isCancelled(), "unable to cancel mandate");
+    });
+}</code></pre>
+<h2 id="fail-early-fail-hard">Fail Early, Fail Hard</h2>
+<p>When an expectation is not met, an exception is thrown straight away. Errors are caught as soon as possible, and invalid values are not allowed to propagate through your application. The idea here is to make sure that bugs in your code are identified as quickly as possible.</p>
+<div class="callout info">
+The greater the distance between when an error occurred and where an error is detected, the harder it is to correctly identify the real cause of the error.
+</div>
+<p>If you're the kind of programmer who does this:</p>
+<pre><code class="language-php">try {
+    // do something ...
+}
+catch (\Exception $e) {
+    // log exception
+    // do nothing
+}</code></pre>
+<p>then you'll get limited benefits from <em>programming by contract</em>. The same is true if your app consumes a lot of libraries which catch all exceptions - especially if they're silently swallowing errors.</p>
+            </article>
+
+                        <nav class="pageflow">
+              <ul>
+                                    <li><a href="index.html">Prev: V1 Overview</a></li>
+                                                      <li></li>
+                                </ul>
+            </nav>
+                    </main>
+
+        <aside class="sidebar">
+            <h2>This Page</h2>
+            <nav class="toc" data-type="ishi-toc" data-max-depth="3">
+            </nav>
+        </aside>
+        <footer>
+            <div class="strapline">
+                <p>Copyright &copy; 2015 <a href="http://ganbarodigital.com">Ganbaro Digital Ltd</a>. Released under the <a href="http://ganbarodigital.github.io/php-mv-contracts/license.html">New BSD</a> license.
+                                            Find Contracts Library for PHP on <a href="https://github.com/ganbarodigital/php-mv-contracts">GitHub</a>.
+                                        Built with <a href="http://couscous.io/">Couscous</a>.
+                </p>
+            </div>
+        </footer>
+    <script src="http://ganbarodigital.github.io/php-mv-contracts/assets/laroux.js"></script>
+    <script src="http://ganbarodigital.github.io/php-mv-contracts/assets/ishi.js"></script>
+    </body>
+</html>

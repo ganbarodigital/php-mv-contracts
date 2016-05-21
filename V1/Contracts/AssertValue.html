@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <!--[if lt IE 9]>
+            <script src="assets/html5shiv.js"></script>
+            <script src="assets/html5printshiv.js"></script>
+        <![endif]-->
+        <meta charset="utf-8"/>
+        <title>Contracts Library for PHP from Ganbaro Digital</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="http://ganbarodigital.github.io/php-mv-contracts/assets/docs.css" rel="stylesheet"/>
+        <link rel="stylesheet" href="http://ganbarodigital.github.io/php-mv-contracts/assets/prism.css">
+        <script src="http://ganbarodigital.github.io/php-mv-contracts/assets/prism.js"></script>
+    </head>
+    <body data-ishi-anchors="1">
+        <header role="banner">
+            <div>
+                <p style="font-size: 34px; padding-top: 10px">Contracts Library for PHP</p>
+                <p style="font-size: 18px; border-bottom: 1px solid; padding-bottom: 10px">Prove the correctness of your code</p>
+            </div>
+            <!--<a href="http://ganbarodigital.github.io/php-mv-contracts/index.html">
+                <img src="http://ganbarodigital.github.io/php-mv-contracts/assets/ganbarodigital.svg" width="60" height="60" style="vertical-align: middle; float: left; margin-right: 15px">
+            </a>-->
+            <nav class="navbar topbar">
+                <ul>
+                                            <li class="">
+                            <a class="" href="http://ganbarodigital.github.io/php-mv-contracts/index.html">Overview</a>
+                        </li>
+                                            <li class="current">
+                            <a class="current" href="http://ganbarodigital.github.io/php-mv-contracts/V1/index.html">Version 1.x</a>
+                        </li>
+                                    </ul>
+            </nav>
+        </header>
+                                                                            <header role="subnav">
+                        <nav class="navbar">
+                            <ul>
+                                                                    <li class="">
+                                        <a class="" href="http://ganbarodigital.github.io/php-mv-contracts/V1/index.html">Introduction</a>
+                                    </li>
+                                                                    <li class="">
+                                        <a class="" href="http://ganbarodigital.github.io/php-mv-contracts/V1/Contracts/index.html">Contracts</a>
+                                    </li>
+                                                                    <li class="">
+                                        <a class="" href="http://ganbarodigital.github.io/php-mv-contracts/V1/Exceptions/index.html">Exceptions</a>
+                                    </li>
+                                                            </ul>
+                        </nav>
+                    </header>
+                                            <main role="main">
+                        <nav class="pageflow">
+              <ul>
+                                    <li><a href="index.html">Prev: Contracts</a></li>
+                                                      <li><a href="CheckContracts.html">Next: CheckContracts class</a></li>
+                                </ul>
+            </nav>
+            
+            <article>
+                <h1 id="assertvalue">AssertValue</h1>
+<div class="callout info">
+Since v1.2016052101
+</div>
+<h2 id="description">Description</h2>
+<p><code>AssertValue</code> is a <a href="http://ganbarodigital.github.io/php-mv-defensive/V1/Interfaces/Requirement.html"><code>Requirement</code></a>. It throws a <a href="../Exceptions/ContractFailed.html"><code>ContractFailed</code></a> exception if an expression does not evaluate to <code>true</code>.</p>
+<h2 id="public-interface">Public Interface</h2>
+<p><code>AssertValue</code> has the following public interface:</p>
+<pre><code class="language-php">// AssertValue lives in this namespace
+namespace GanbaroDigital\Contracts\V1\Contracts;
+
+// our base classes and interfaces
+use GanbaroDigital\Defensive\V1\Interfaces\Requirement;
+
+// our exceptions
+use GanbaroDigital\Contracts\V1\Exceptions\ContractFailed;
+
+/**
+ * check that an expression is true ... and if it is not, throw an exception
+ */
+class AssertValue implements Requirement
+{
+    /**
+     * create a composable requirement
+     *
+     * @param  boolean $expr
+     *         the expression we use to check $value
+     * @param  string|null $reason
+     *         the reason why $expr must be true
+     * @return Requirement
+     *         a requirement that can be enforced
+     */
+    public static function apply($expr, $reason = null);
+
+    /**
+     * constructor
+     *
+     * @param  boolean $expr
+     *         the expression we are checking
+     * @param  string|null $reason
+     *         the reason why $expr must be true
+     * @return boolean
+     *         TRUE on success
+     */
+    public function __construct($expr, $reason = null);
+
+    /**
+     * check that an expression is true ... and if it is not, throw an
+     * exception
+     *
+     * @param  mixed $data
+     *         the value check we are checking
+     * @param  string $fieldOrVarName
+     *         the name of the field we are checking
+     * @return boolean
+     *         TRUE on success
+     */
+    public function __invoke($data, $fieldOrVarName = 'value');
+
+    /**
+     * check that an expression is true ... and if it is not, throw an
+     * exception
+     *
+     * @param  mixed $data
+     *         the value check we are checking
+     * @param  string $fieldOrVarName
+     *         the name of the field we are checking
+     * @return boolean
+     *         TRUE on success
+     */
+    public function to($data, $fieldOrVarName = 'value');
+}</code></pre>
+<h2 id="how-to-use">How To Use</h2>
+<h3 id="enforcing-a-contract">Enforcing A Contract</h3>
+<p>Use the <code>::apply()-&gt;to()</code> pattern to check a value:</p>
+<pre><code class="language-php">use GanbaroDigital\Contracts\V1\Contracts\AssertValue;
+
+$data = 10;
+AssertValue::apply($data &gt; 4)-&gt;to($data);</code></pre>
+<p>If the expression does not evaluates to <code>true</code>, an exception is thrown:</p>
+<pre><code class="language-php">use GanbaroDigital\Contracts\V1\Contracts\AssertValue;
+
+// throws a ContractFailed exception
+$data = 2;
+AssertValue::apply($data &gt; 4)-&gt;to($data);</code></pre>
+<h2 id="class-contract">Class Contract</h2>
+<p>Here is the contract for this class:</p>
+<pre><code>GanbaroDigital\Contracts\V1\Contracts\AssertValue
+ [x] Can instantiate
+ [x] is Requirement
+ [x] Returns true if expression is true
+ [x] Throws exception if expression is not true</code></pre>
+<p>Class contracts are built from this class's unit tests.</p>
+<div class="callout success">
+Future releases of this class will not break this contract.
+</div>
+<div class="callout info">
+<p>Future releases of this class may add to this contract. New additions may include:</p>
+<ul>
+<li>clarifying existing behaviour (e.g. stricter contract around input or return types)</li>
+<li>add new behaviours (e.g. extra class methods)</li>
+</ul>
+</div>
+<div class="callout warning">
+<p>When you use this class, you can only rely on the behaviours documented by this contract.</p>
+<p>If you:</p>
+<ul>
+<li>find other ways to use this class,</li>
+<li>or depend on behaviours that are not covered by a unit test,</li>
+<li>or depend on undocumented internal states of this class,</li>
+</ul>
+<p>... your code may not work in the future.</p>
+</div>
+<h2 id="notes">Notes</h2>
+<h3 id="combining-assertvalue-with-phps-assert">Combining AssertValue With PHP's assert()</h3>
+<p>PHP 5 and PHP 7 have <a href="http://php.net/manual/en/function.assert.php"><code>assert()</code></a> functions that behave differently:</p>
+<ul>
+<li>PHP 5's <code>assert()</code> (by default) raises a legacy PHP warning</li>
+<li>PHP 7's <code>assert()</code> can be told to thrown an exception, but you have to provide it each time</li>
+</ul>
+<p>Both PHP 5 and PHP 7 support disabling <code>assert()</code> to increase performance in Production.</p>
+<ul>
+<li>In PHP 5, any expression passed to <code>assert()</code> is still evaluated first, unless you pass the expression as a string (which quickly gets very horrible to maintain).</li>
+<li>In PHP 7, the expression is not evaluated. Disabled assertions are (effectively) commented out.</li>
+</ul>
+<p><code>AssertValue</code> can be combined with PHP's <code>assert()</code> safely:</p>
+<pre><code class="language-php">$data = 10;
+assert(AssertValue::apply($data &gt; 5)-&gt;to($data));</code></pre>
+<p>That will work on PHP 5 and PHP 7, and bring you these benefits:</p>
+<ol>
+<li>Ease of use: can pass any PHP expression, no need to pass it as as string</li>
+<li>Stricter: the expression has to evaluate to <code>true</code>, anything else is treated as a failure</li>
+<li>Modern error flow: <code>AssertValue</code> throws an exception, no need to deal with PHP's legacy error system</li>
+<li>Better error information: the <code>ContractFailed</code> exception contains <code>$data</code>'s value and type</li>
+</ol>
+<p>On PHP 5, switching off assertions will not improve the speed of your code. <code>AssertValue</code> will still run, and it will still throw an exception if the expression isn't <code>true</code>.</p>
+<h2 id="see-also">See Also</h2>
+<ul>
+<li><a href="http://ganbarodigital.github.io/php-mv-defensive/V1/Interfaces/Requirement.html"><code>Requirement</code> interface</a></li>
+</ul>
+            </article>
+
+                        <nav class="pageflow">
+              <ul>
+                                    <li><a href="index.html">Prev: Contracts</a></li>
+                                                      <li><a href="CheckContracts.html">Next: CheckContracts class</a></li>
+                                </ul>
+            </nav>
+                    </main>
+
+        <aside class="sidebar">
+            <h2>This Page</h2>
+            <nav class="toc" data-type="ishi-toc" data-max-depth="3">
+            </nav>
+        </aside>
+        <footer>
+            <div class="strapline">
+                <p>Copyright &copy; 2015 <a href="http://ganbarodigital.com">Ganbaro Digital Ltd</a>. Released under the <a href="http://ganbarodigital.github.io/php-mv-contracts/license.html">New BSD</a> license.
+                                            Find Contracts Library for PHP on <a href="https://github.com/ganbarodigital/php-mv-contracts">GitHub</a>.
+                                        Built with <a href="http://couscous.io/">Couscous</a>.
+                </p>
+            </div>
+        </footer>
+    <script src="http://ganbarodigital.github.io/php-mv-contracts/assets/laroux.js"></script>
+    <script src="http://ganbarodigital.github.io/php-mv-contracts/assets/ishi.js"></script>
+    </body>
+</html>

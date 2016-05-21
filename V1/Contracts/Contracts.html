@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <!--[if lt IE 9]>
+            <script src="assets/html5shiv.js"></script>
+            <script src="assets/html5printshiv.js"></script>
+        <![endif]-->
+        <meta charset="utf-8"/>
+        <title>Contracts Library for PHP from Ganbaro Digital</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="http://ganbarodigital.github.io/php-mv-contracts/assets/docs.css" rel="stylesheet"/>
+        <link rel="stylesheet" href="http://ganbarodigital.github.io/php-mv-contracts/assets/prism.css">
+        <script src="http://ganbarodigital.github.io/php-mv-contracts/assets/prism.js"></script>
+    </head>
+    <body data-ishi-anchors="1">
+        <header role="banner">
+            <div>
+                <p style="font-size: 34px; padding-top: 10px">Contracts Library for PHP</p>
+                <p style="font-size: 18px; border-bottom: 1px solid; padding-bottom: 10px">Prove the correctness of your code</p>
+            </div>
+            <!--<a href="http://ganbarodigital.github.io/php-mv-contracts/index.html">
+                <img src="http://ganbarodigital.github.io/php-mv-contracts/assets/ganbarodigital.svg" width="60" height="60" style="vertical-align: middle; float: left; margin-right: 15px">
+            </a>-->
+            <nav class="navbar topbar">
+                <ul>
+                                            <li class="">
+                            <a class="" href="http://ganbarodigital.github.io/php-mv-contracts/index.html">Overview</a>
+                        </li>
+                                            <li class="current">
+                            <a class="current" href="http://ganbarodigital.github.io/php-mv-contracts/V1/index.html">Version 1.x</a>
+                        </li>
+                                    </ul>
+            </nav>
+        </header>
+                                                                            <header role="subnav">
+                        <nav class="navbar">
+                            <ul>
+                                                                    <li class="">
+                                        <a class="" href="http://ganbarodigital.github.io/php-mv-contracts/V1/index.html">Introduction</a>
+                                    </li>
+                                                                    <li class="current">
+                                        <a class="current" href="http://ganbarodigital.github.io/php-mv-contracts/V1/Contracts/index.html">Contracts</a>
+                                    </li>
+                                                                    <li class="">
+                                        <a class="" href="http://ganbarodigital.github.io/php-mv-contracts/V1/Exceptions/index.html">Exceptions</a>
+                                    </li>
+                                                            </ul>
+                        </nav>
+                    </header>
+                                            <main role="main">
+                        <nav class="pageflow">
+              <ul>
+                                    <li><a href="ContractChecks.html">Prev: ContractChecks</a></li>
+                                                      <li></li>
+                                </ul>
+            </nav>
+            
+            <article>
+                <h1 id="contracts">Contracts</h1>
+<div class="callout info">
+Since v1.2016052101
+</div>
+<h2 id="description">Description</h2>
+<p><code>Contracts</code> provides support for adding <em>programming by contract</em> to your own code.</p>
+<p>It's a convenience wrapper around all of the functionality defined by the <em>Contracts Library</em>.</p>
+<h2 id="public-interface">Public Interface</h2>
+<p><code>Contracts</code> has the following public interface:</p>
+<pre><code class="language-php">// Contracts lives in this namespace
+namespace GanbaroDigital\Contracts\V1;
+
+class Contracts
+{
+    // ====================================================================
+    //
+    // contract checking
+    //
+    // --------------------------------------------------------------------
+
+    /**
+     * tell the Contracts Library to check the contracts in the
+     * '::requireThat()', '::ensureThat()' and '::checkThat()' methods
+     *
+     * @return void
+     */
+    public static function enableContracts();
+
+    /**
+     * tell the Contracts Library *not* to check the contracts in the
+     * '::requireThat()', '::ensureThat()' and '::checkThat()' methods
+     *
+     * @return void
+     */
+    public static function disableContracts();
+
+    /**
+     * are the '::requireThat()', '::ensureThat()' and '::checkThat()' methods
+     * enforcing their contacts?
+     *
+     * @return boolean
+     *         TRUE if these methods run their contacts
+     *         FALSE if these methods skip over their contracts
+     */
+    public static function areContractsEnabled();
+
+    // ====================================================================
+    //
+    // require / check / ensure
+    //
+    // --------------------------------------------------------------------
+
+    /**
+     * check a set of contract terms *if* we are enforcing wrapped contracts
+     *
+     * use this at the start of your function / method to make sure that
+     * all of your pre-conditions are met before you do anything else
+     *
+     * @param  callable $callback
+     *         function to call to check the set of contract terms
+     * @param  array $params
+     *         a list of parameters to pass into $callback
+     * @return boolean
+     *         TRUE on success
+     */
+    public static function requireThat($callback, $params = []);
+
+    /**
+     * check a set of contract terms *if* we are enforcing wrapped contracts
+     *
+     * use this at the end of your function / method to make sure that
+     * all of your post-conditions are met before you do anything else
+     *
+     * @param  callable $callback
+     *         function to call to check the set of contract terms
+     * @param  array $params
+     *         a list of parameters to pass into $callback
+     * @return boolean
+     *         TRUE on success
+     */
+    public static function ensureThat($callback, $params = []);
+
+    /**
+     * check a set of contract terms *if* we are enforcing wrapped contracts
+     *
+     * use this in the middle of your logic to make sure that you're happy
+     * with everything up to this point
+     *
+     * @param  callable $callback
+     *         function to call to check the set of contract terms
+     * @param  array $params
+     *         a list of parameters to pass into $callback
+     * @return boolean
+     *         TRUE on success
+     */
+    public static function checkThat($callback, $params = []);
+
+    // ====================================================================
+    //
+    // individual contract terms
+    //
+    // --------------------------------------------------------------------
+
+    /**
+     * check that an expression is true ... and if it is not, throw an
+     * exception
+     *
+     * @param  mixed $value
+     *         the value check we are checking
+     * @param  boolean $expr
+     *         the expression we use to check $value
+     * @param  string|null $reason
+     *         the reason why $expr must be true
+     * @return boolean
+     *         TRUE on success
+     */
+    public static function assertValue($value, $expr, $reason = null);
+
+    /**
+     * apply the same set of contracts to all the values in an array
+     *
+     * @param  array $values
+     *         the list of values to check
+     * @param  callable $callback
+     *         the contracts to apply, as a function
+     * @return boolean
+     *         TRUE on success
+     */
+    public static function forAll($values, $callback);
+}</code></pre>
+<h2 id="how-to-use">How To Use</h2>
+<h3 id="enabling--disabling-contract-checking">Enabling / Disabling Contract Checking</h3>
+<p>Call <code>Contracts::enableContracts()</code> and <code>Contracts::disableContracts()</code> to enable or disable contract checking.</p>
+<pre><code class="language-php">use GanbaroDigital\Contracts\V1\Contracts;
+
+// switch contracts on
+Contracts::enableContracts();
+
+// switch them off again
+Contracts::disableContracts();</code></pre>
+<h3 id="checking-if-contracts-are-enabled">Checking If Contracts Are Enabled</h3>
+<p>Call <code>Contracts::areContractsEnabled()</code> to discover if contracts are enabled or not:</p>
+<pre><code class="language-php">use GanbaroDigital\Contracts\V1\Contracts;
+
+// will output 'true' or 'false'
+var_dump(Contracts::areContractsEnabled());</code></pre>
+<h3 id="checking-contracts">Checking Contracts</h3>
+<p>Use <code>Contracts::assertValue()</code> to check an individual contract term. Wrap them up in a function, and pass that to <code>Contracts::requireThat()</code> or <code>Contracts::ensureThat()</code> to check the contract terms.</p>
+<pre><code class="language-php">use GanbaroDigital\Contracts\V1\Contracts;
+
+function cancelDirectDebit(DirectDebit $mandate)
+{
+    // correctness!
+    Contracts::requireThat(function() use ($mandate) {
+        Contracts::assertValue($mandate, !$mandate-&gt;isCancelled(), "mandate is already cancelled");
+        Contracts::assertValue($mandate, !$mandate-&gt;isDeleted(), "mandate has been deleted");
+    });
+
+    // cancel the mandate here
+    //
+    // it isn't the API client's role to check whether or not a mandate should
+    // be cancelled ... it's just going to pass through the details to the
+    // remote API
+    $this-&gt;apiClient-&gt;cancelMandate($mandate);
+
+    // correctness!
+    Contracts::ensureThat(function() use ($mandate) {
+        Contracts::assertValue($mandate, $mandate-&gt;isCancelled(), "failed to cancel mandate");
+    });
+}</code></pre>
+<p>If contract checking is disabled, <code>Contracts::requireThat()</code> and <code>Contracts::ensureThat()</code> will not attempt to execute the function you pass to them.</p>
+<h2 id="class-contract">Class Contract</h2>
+<p>Here is the contract for this class:</p>
+<pre><code>GanbaroDigital\Contracts\V1\Contracts
+ [x] Can enable contracts
+ [x] Can disable contracts
+ [x] Can check that contracts are enabled
+ [x] Can require that pre conditions are met
+ [x] Can ensure that post conditions are met
+ [x] Can check work in progress
+ [x] Can assert a value
+ [x] throws exception if AssertValue expression is not true
+ [x] can apply a check to all values</code></pre>
+<p>Class contracts are built from this class's unit tests.</p>
+<div class="callout success">
+Future releases of this class will not break this contract.
+</div>
+<div class="callout info">
+<p>Future releases of this class may add to this contract. New additions may include:</p>
+<ul>
+<li>clarifying existing behaviour (e.g. stricter contract around input or return types)</li>
+<li>add new behaviours (e.g. extra class methods)</li>
+</ul>
+</div>
+<div class="callout warning">
+<p>When you use this class, you can only rely on the behaviours documented by this contract.</p>
+<p>If you:</p>
+<ul>
+<li>find other ways to use this class,</li>
+<li>or depend on behaviours that are not covered by a unit test,</li>
+<li>or depend on undocumented internal states of this class,</li>
+</ul>
+<p>... your code may not work in the future.</p>
+</div>
+<h2 id="notes">Notes</h2>
+<h3 id="recommended-interface">Recommended Interface</h3>
+<p><code>Contracts</code> is the recommended interface to call from your code.</p>
+<p>Internally, <code>Contracts</code> uses the <a href="AssertValue.html"><code>AssertValue</code></a>, <a href="CheckContracts.html"><code>CheckContracts</code></a> and <a href="ContractChecks.html"><code>ContractChecks</code></a> classes. You can safely call these classes directly if you want to.</p>
+            </article>
+
+                        <nav class="pageflow">
+              <ul>
+                                    <li><a href="ContractChecks.html">Prev: ContractChecks</a></li>
+                                                      <li></li>
+                                </ul>
+            </nav>
+                    </main>
+
+        <aside class="sidebar">
+            <h2>This Page</h2>
+            <nav class="toc" data-type="ishi-toc" data-max-depth="3">
+            </nav>
+        </aside>
+        <footer>
+            <div class="strapline">
+                <p>Copyright &copy; 2015 <a href="http://ganbarodigital.com">Ganbaro Digital Ltd</a>. Released under the <a href="http://ganbarodigital.github.io/php-mv-contracts/license.html">New BSD</a> license.
+                                            Find Contracts Library for PHP on <a href="https://github.com/ganbarodigital/php-mv-contracts">GitHub</a>.
+                                        Built with <a href="http://couscous.io/">Couscous</a>.
+                </p>
+            </div>
+        </footer>
+    <script src="http://ganbarodigital.github.io/php-mv-contracts/assets/laroux.js"></script>
+    <script src="http://ganbarodigital.github.io/php-mv-contracts/assets/ishi.js"></script>
+    </body>
+</html>
