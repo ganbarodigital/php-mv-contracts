@@ -10,6 +10,15 @@ pageflow_next_text: Contributing
 
 ## develop branch
 
+Nothing yet.
+
+## v1.2016052101
+
+Released Sat 21st May 2016.
+
+- feature release
+- initial release
+
 ### New
 
 * Ported Stuart's ContactLib over

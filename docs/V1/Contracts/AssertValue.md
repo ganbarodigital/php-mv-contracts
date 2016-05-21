@@ -9,8 +9,8 @@ pageflow_next_text: CheckContracts class
 
 # AssertValue
 
-<div class="callout warning">
-Not yet in a tagged release
+<div class="callout info">
+Since v1.2016052101
 </div>
 
 ## Description
