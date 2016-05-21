@@ -13,3 +13,4 @@ pageflow_next_text: Contributing
 ### New
 
 * Ported Stuart's ContactLib over
+  - Added `ContractsException` interface
