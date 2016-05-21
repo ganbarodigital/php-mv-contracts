@@ -15,3 +15,4 @@ pageflow_next_text: Contributing
 * Ported Stuart's ContactLib over
   - Added `ContractsException` interface
   - Added `ContractFailed` exception
+  - Added `ContractsExceptions` DI factory
