@@ -45,10 +45,14 @@
 
 namespace GanbaroDigital\Contracts\V1\Exceptions;
 
+use GanbaroDigital\Contracts\V1\Contracts;
+use GanbaroDigital\Contracts\V1\Contracts\AssertValue;
+use GanbaroDigital\Contracts\V1\Contracts\CheckContracts;
 use GanbaroDigital\ExceptionHelpers\V1\BaseExceptions\ParameterisedException;
 use GanbaroDigital\ExceptionHelpers\V1\Callers\Filters\FilterCodeCaller;
 use GanbaroDigital\HttpStatus\Interfaces\HttpRuntimeErrorException;
 use GanbaroDigital\HttpStatus\StatusProviders\RuntimeError\UnexpectedErrorStatusProvider;
+use GanbaroDigital\MissingBits\TypeInspectors\GetPrintableType;
 
 class ContractFailed
   extends ParameterisedException
@@ -70,10 +74,11 @@ class ContractFailed
     {
         // who called us?
         $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
-        $callerFilter = FilterCodeCaller::$DEFAULT_PARTIALS;
-        $callerFilter[] = self::class;
-        $callerFilter[] = static::class;
-        $caller = FilterCodeCaller::from($trace);
+        $callerFilter = self::buildCallerFilter();
+        $caller = FilterCodeCaller::from($trace, $callerFilter);
+
+        // what type of data is $value?
+        $valueType = GetPrintableType::of($value);
 
         $msg = "contract failed at %callerName\$s; failed value is: %value\$s";
         if ($reason !== null) {
@@ -82,9 +87,34 @@ class ContractFailed
         $exceptionData = [
             "caller" => $caller,
             "callerName" => $caller->getCaller(),
-            "value" => print_r($value, true),
+            "value" => $value,
+            "valueType" => $valueType,
             "reason" => $reason,
         ];
         return new static($msg, $exceptionData);
+    }
+
+    /**
+     * what do we want to filter from our stack trace?
+     *
+     * @return array
+     */
+    private static function buildCallerFilter()
+    {
+        // we start with whatever the default list is
+        $callerFilter = FilterCodeCaller::$DEFAULT_PARTIALS;
+
+        // we want the exception's error message to refer to whatever
+        // function / method is trying to enforce contracts
+        //
+        // the best way to do this is to filter out all of our classes
+        $callerFilter[] = self::class;
+        $callerFilter[] = static::class;
+        $callerFilter[] = AssertValue::class;
+        $callerFilter[] = CheckContracts::class;
+        $callerFilter[] = Contracts::class;
+
+        // all done
+        return $callerFilter;
     }
 }

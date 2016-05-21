@@ -192,6 +192,7 @@ class ContractFailedTest extends PHPUnit_Framework_TestCase
 
     /**
      * @covers ::newFromBadValue
+     * @covers ::buildCallerFilter
      */
     public function testCanCreateFromBadValue()
     {
