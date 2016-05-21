@@ -16,3 +16,4 @@ pageflow_next_text: Contributing
   - Added `ContractsException` interface
   - Added `ContractFailed` exception
   - Added `ContractsExceptions` DI factory
+  - Added `AssertValue` requirement class
