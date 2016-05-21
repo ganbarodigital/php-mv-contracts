@@ -1,8 +1,8 @@
 ---
 currentSection: v1
 currentItem: contracts
-pageflow_prev_url: AssertValue.html
-pageflow_prev_text: AssertValue class
+pageflow_prev_url: CheckContracts.html
+pageflow_prev_text: CheckContracts class
 ---
 
 # ContractChecks

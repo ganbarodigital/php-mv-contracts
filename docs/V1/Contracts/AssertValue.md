@@ -3,8 +3,8 @@ currentSection: v1
 currentItem: Contracts
 pageflow_prev_url: index.html
 pageflow_prev_text: Contracts
-pageflow_next_url: ContractChecks.html
-pageflow_next_text: ContractChecks class
+pageflow_next_url: CheckContracts.html
+pageflow_next_text: CheckContracts class
 ---
 
 # AssertValue
