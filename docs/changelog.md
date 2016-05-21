@@ -19,3 +19,4 @@ pageflow_next_text: Contributing
   - Added `AssertValue` requirement class
   - Added `CheckContracts` class
   - Added `ContractChecks` class
+  - Added `Contracts` class to be main user API

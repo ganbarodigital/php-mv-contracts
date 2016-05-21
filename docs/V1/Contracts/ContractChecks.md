@@ -3,6 +3,8 @@ currentSection: v1
 currentItem: contracts
 pageflow_prev_url: CheckContracts.html
 pageflow_prev_text: CheckContracts class
+pageflow_next_url: Contracts.html
+pageflow_next_text: Contracts class
 ---
 
 # ContractChecks
@@ -29,7 +31,7 @@ class ContractChecks
      * reset contract checking to its default state
      *
      * this has been added for unit testing purposes
-     * 
+     *
      * @return void
      */
     public static function resetToDefaults();

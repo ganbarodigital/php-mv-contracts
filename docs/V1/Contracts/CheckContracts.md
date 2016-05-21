@@ -95,7 +95,6 @@ function cancelDirectDebit(DirectDebit $mandate)
 }
 ```
 
-
 ## Class Contract
 
 Here is the contract for this class:
