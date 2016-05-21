@@ -11,14 +11,14 @@ exclude:
     - tests
     - vendor
 
-baseUrl: http://ganbarodigital.github.io/php-mv-defensive
+baseUrl: http://ganbarodigital.github.io/php-mv-contracts
 
 github:
     user: ganbarodigital
-    repo: php-mv-defensive
+    repo: php-mv-contracts
 
-title: Defensive Library for PHP
-subTitle: Easy-to-use collection of helpers to improve the robustness of your code
+title: Contracts Library for PHP
+subTitle: Prove the correctness of your code
 
 menu:
     overview:
@@ -62,9 +62,6 @@ menu:
             contracts:
                 text: Contracts
                 relativeUrl: V1/Contracts/index.html
-            requirements:
-                text: Requirements
-                relativeUrl: V1/Requirements/index.html
             exceptions:
                 text: Exceptions
                 relativeUrl: V1/Exceptions/index.html
