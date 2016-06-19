@@ -53,7 +53,7 @@ class ContractsExceptions extends FactoryListContainer
     {
         // the exceptions that our library throws
         $ourExceptions = [
-            'ContractFailed::newFromBadValue' => [ ContractFailed::class, 'newFromBadValue' ],
+            'ContractFailed::newFromVar' => [ ContractFailed::class, 'newFromVar' ],
         ];
 
         // build it

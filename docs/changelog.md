@@ -10,7 +10,9 @@ pageflow_next_text: Contributing
 
 ## develop branch
 
-Nothing yet.
+### Fixes
+
+* Updated to support latest Exception Helpers library
 
 ## v1.2016052101
 

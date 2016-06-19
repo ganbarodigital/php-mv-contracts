@@ -46,8 +46,10 @@
 namespace GanbaroDigitalTest\Contracts\V1\Contracts;
 
 use GanbaroDigital\Contracts\V1\Contracts\AssertValue;
+use GanbaroDigital\Contracts\V1\Exceptions\ContractFailed;
 use GanbaroDigital\Defensive\V1\Interfaces\Requirement;
 use PHPUnit_Framework_TestCase;
+use GanbaroDigital\ExceptionHelpers\V1\Callers\Values\CodeCaller;
 
 /**
  * @coversDefaultClass GanbaroDigital\Contracts\V1\Contracts\AssertValue
@@ -65,7 +67,7 @@ class AssertValueTest extends PHPUnit_Framework_TestCase
         // ----------------------------------------------------------------
         // perform the change
 
-        $unit = new AssertValue(false);
+        $unit = new AssertValue(false, '');
 
         // ----------------------------------------------------------------
         // test the results
@@ -84,7 +86,7 @@ class AssertValueTest extends PHPUnit_Framework_TestCase
         // ----------------------------------------------------------------
         // perform the change
 
-        $unit = new AssertValue(false);
+        $unit = new AssertValue(false, '');
 
         // ----------------------------------------------------------------
         // test the results
@@ -129,6 +131,211 @@ class AssertValueTest extends PHPUnit_Framework_TestCase
         // perform the change
 
         AssertValue::apply($expr)->to($value);
+    }
+
+    /**
+     * @covers ::apply
+     * @covers ::to
+     */
+    public function testFailedAssertProvidesLocationOfBrokenContract()
+    {
+        // ----------------------------------------------------------------
+        // setup your test
+        //
+        // we care about
+        // - message
+        // - thrownByName
+        // - thrownBy
+
+        $value = 5;
+        $reason = "must be less than 4";
+        $e = null;
+
+        $expectedMessage = __CLASS__ . '->' . __FUNCTION__ . '()@' . (__LINE__ + 14) . ': contract failed; ' . $reason;
+        $expectedData = [
+            'thrownByName' => __CLASS__ . '->' . __FUNCTION__ . '()@' . (__LINE__ + 12),
+            'thrownBy' => new CodeCaller(__CLASS__, __FUNCTION__, '->', __FILE__, __LINE__ + 11),
+            'fieldOrVar' => $value,
+            'fieldOrVarName' => 'value',
+            'reason' => $reason,
+            'dataType' => 'integer<' . $value . '>'
+        ];
+
+        // ----------------------------------------------------------------
+        // perform the change
+
+        try {
+            AssertValue::apply($value < 4, $reason)->to($value);
+        }
+        catch (ContractFailed $e) {
+            // do nothing
+        }
+
+        // ----------------------------------------------------------------
+        // test the results
+
+        // make sure we caught an exception
+        $this->assertInstanceOf(ContractFailed::class, $e);
+
+        // make sure it has the details we expect
+        $actualMessage = $e->getMessage();
+        $actualData = $e->getMessageData();
+
+        $this->assertEquals($expectedMessage, $actualMessage);
+        $this->assertEquals($expectedData, $actualData);
+    }
+
+    /**
+     * @covers ::apply
+     * @covers ::to
+     */
+    public function testFailedAssertProvidesContractTerms()
+    {
+        // ----------------------------------------------------------------
+        // setup your test
+        //
+        // we care about:
+        // - message
+        // - reason
+
+        $value = 5;
+        $reason = "must be less than 4";
+        $e = null;
+
+        $expectedMessage = __CLASS__ . '->' . __FUNCTION__ . '()@' . (__LINE__ + 14) . ': contract failed; ' . $reason;
+        $expectedData = [
+            'thrownByName' => __CLASS__ . '->' . __FUNCTION__ . '()@' . (__LINE__ + 12),
+            'thrownBy' => new CodeCaller(__CLASS__, __FUNCTION__, '->', __FILE__, __LINE__ + 11),
+            'fieldOrVar' => $value,
+            'fieldOrVarName' => 'value',
+            'reason' => $reason,
+            'dataType' => 'integer<' . $value . '>'
+        ];
+
+        // ----------------------------------------------------------------
+        // perform the change
+
+        try {
+            AssertValue::apply($value < 4, $reason)->to($value);
+        }
+        catch (ContractFailed $e) {
+            // do nothing
+        }
+
+        // ----------------------------------------------------------------
+        // test the results
+
+        // make sure we caught an exception
+        $this->assertInstanceOf(ContractFailed::class, $e);
+
+        // make sure it has the details we expect
+        $actualMessage = $e->getMessage();
+        $actualData = $e->getMessageData();
+
+        $this->assertEquals($expectedMessage, $actualMessage);
+        $this->assertEquals($expectedData, $actualData);
+    }
+
+    /**
+     * @covers ::apply
+     * @covers ::to
+     */
+    public function testFailedAssertFallsBackToDefaultContractTerms()
+    {
+        // ----------------------------------------------------------------
+        // setup your test
+        //
+        // we care about:
+        // - message
+        // - reason
+
+        $value = 5;
+        $reason = "see source code for details";
+        $e = null;
+
+        $expectedMessage = __CLASS__ . '->' . __FUNCTION__ . '()@' . (__LINE__ + 14) . ': contract failed; ' . $reason;
+        $expectedData = [
+            'thrownByName' => __CLASS__ . '->' . __FUNCTION__ . '()@' . (__LINE__ + 12),
+            'thrownBy' => new CodeCaller(__CLASS__, __FUNCTION__, '->', __FILE__, __LINE__ + 11),
+            'fieldOrVar' => $value,
+            'fieldOrVarName' => 'value',
+            'reason' => $reason,
+            'dataType' => 'integer<' . $value . '>'
+        ];
+
+        // ----------------------------------------------------------------
+        // perform the change
+
+        try {
+            AssertValue::apply($value < 4)->to($value);
+        }
+        catch (ContractFailed $e) {
+            // do nothing
+        }
+
+        // ----------------------------------------------------------------
+        // test the results
+
+        // make sure we caught an exception
+        $this->assertInstanceOf(ContractFailed::class, $e);
+
+        // make sure it has the details we expect
+        $actualMessage = $e->getMessage();
+        $actualData = $e->getMessageData();
+
+        $this->assertEquals($expectedMessage, $actualMessage);
+        $this->assertEquals($expectedData, $actualData);
+    }
+
+    /**
+     * @covers ::apply
+     * @covers ::to
+     */
+    public function testFailedAssertProvidesRejectedValue()
+    {
+        // ----------------------------------------------------------------
+        // setup your test
+        //
+        // we care about:
+        // - fieldOrVar
+        // - dataType
+
+        $value = 5;
+        $reason = "must be less than 4";
+        $e = null;
+
+        $expectedMessage = __CLASS__ . '->' . __FUNCTION__ . '()@' . (__LINE__ + 14) . ': contract failed; ' . $reason;
+        $expectedData = [
+            'thrownByName' => __CLASS__ . '->' . __FUNCTION__ . '()@' . (__LINE__ + 12),
+            'thrownBy' => new CodeCaller(__CLASS__, __FUNCTION__, '->', __FILE__, __LINE__ + 11),
+            'fieldOrVar' => $value,
+            'fieldOrVarName' => 'value',
+            'reason' => $reason,
+            'dataType' => 'integer<' . $value . '>'
+        ];
+
+        // ----------------------------------------------------------------
+        // perform the change
+
+        try {
+            AssertValue::apply($value < 4, $reason)->to($value);
+        }
+        catch (ContractFailed $e) {
+            // do nothing
+        }
+
+        // ----------------------------------------------------------------
+        // test the results
+
+        // make sure we caught an exception
+        $this->assertInstanceOf(ContractFailed::class, $e);
+
+        // make sure it has the details we expect
+        $actualMessage = $e->getMessage();
+        $actualData = $e->getMessageData();
+
+        $this->assertEquals($expectedMessage, $actualMessage);
+        $this->assertEquals($expectedData, $actualData);
     }
 
     public function provideFailedExpressions()
