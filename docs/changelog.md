@@ -10,6 +10,12 @@ pageflow_next_text: Contributing
 
 ## develop branch
 
+Nothing yet.
+
+## v1.2016061901
+
+Released Sun 19th Jun 2016.
+
 ### Fixes
 
 * Updated to support latest Exception Helpers library
