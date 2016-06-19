@@ -62,7 +62,7 @@ use GanbaroDigital\Contracts\V1\Exceptions\ContractsExceptions;
 
 $diContainer = new ContractsExceptions;
 
-throw $diContainer['ContractFailed::newFromBadValue'](false);
+throw $diContainer['ContractFailed::newFromVar'](false);
 ```
 
 ## Class Contract
@@ -72,7 +72,7 @@ Here is the contract for this class:
     GanbaroDigital\Contracts\V1\Exceptions\ContractsExceptions
      [x] Can instantiate
      [x] Is factory list
-     [x] has factory for ContractFailed newFromBadValue
+     [x] has factory for ContractFailed newFromVar
 
 Class contracts are built from this class's unit tests.
 

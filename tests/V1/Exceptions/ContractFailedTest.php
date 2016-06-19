@@ -191,10 +191,9 @@ class ContractFailedTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::newFromBadValue
-     * @covers ::buildCallerFilter
+     * @covers ::newFromVar
      */
-    public function testCanCreateFromBadValue()
+    public function test_can_create_from_PHP_variable()
     {
         // ----------------------------------------------------------------
         // setup your test
@@ -205,7 +204,7 @@ class ContractFailedTest extends PHPUnit_Framework_TestCase
         // ----------------------------------------------------------------
         // perform the change
 
-        $unit = ContractFailed::newFromBadValue($value, $reason);
+        $unit = ContractFailed::newFromVar($value, '$value', ['reason' => $reason]);
 
         // ----------------------------------------------------------------
         // test the results

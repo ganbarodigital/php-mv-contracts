@@ -41,16 +41,36 @@ class ContractFailed
     // we map onto HTTP 500
     use UnexpectedErrorStatusProvider;
 
+    // default values for extra data
+    static protected $defaultExtras = [
+        'reason' => 'no reason provided',
+    ];
+
     /**
      * create a new exception when a value fails a contract
      *
-     * @param  mixed $value
-     *         the value that failed the contract
-     * @param  string|null $reason
-     *         details about the contract that failed
+     * @param  mixed $fieldOrVar
+     *         the value that you're throwing an exception about
+     * @param  string $fieldOrVarName
+     *         the name of the value in your code
+     * @param  array $extraData
+     *         extra data that you want to include in your exception
+     * @param  int|null $typeFlags
+     *         do we want any extra type information in the final
+     *         exception message?
+     * @param  array $callStackFilter
+     *         are there any namespaces we want to filter out of
+     *         the call stack?
      * @return ContractFailed
+     *         an fully-built exception for you to throw
      */
-    public static function newFromBadValue($value, $reason = null);
+    public static function newFromVar(
+        $fieldOrVar,
+        $fieldOrVarName,
+        array $extraData = [],
+        $typeFlags = null,
+        array $callStackFilter = []
+    );
 
     /**
      * what was the data that we used to create the printable message?
@@ -79,12 +99,17 @@ class ContractFailed
 
 ### Creating Exceptions To Throw
 
-Call `ContractFailed::newFromBadValue()` to create a new throwable exception:
+Call `ContractFailed::newFromVar()` to create a new throwable exception:
 
 ```php
 use GanbaroDigital\Contracts\V1\Exceptions\ContractFailed;
 
-throw ContractFailed::newFromBadValue(null, '\$arg1 cannot be null');
+$arg1 = null;
+throw ContractFailed::newFromVar(
+    $arg1,
+    '$arg1',
+    [ 'reason' => 'cannot be null']
+);
 ```
 
 ### Catching The Exception
@@ -96,7 +121,12 @@ throw ContractFailed::newFromBadValue(null, '\$arg1 cannot be null');
 use GanbaroDigital\Contracts\V1\Exceptions\ContractFailed;
 
 try {
-    throw ContractFailed::newFromBadValue(null, '\$arg1 cannot be null');
+    $arg1 = null;
+    throw ContractFailed::newFromVar(
+        $arg1,
+        '$arg1',
+        [ 'reason' => 'cannot be null']
+    );
 }
 catch(BadRequirements $e) {
     // ...
@@ -106,12 +136,17 @@ catch(BadRequirements $e) {
 ```php
 // example 2: catch all exceptions thrown by the Contracts Library
 use GanbaroDigital\Contracts\V1\Exceptions\ContractFailed;
-use GanbaroDigital\Contracts\V1\Exceptions\DefensiveException;
+use GanbaroDigital\Contracts\V1\Exceptions\ContractsException;
 
 try {
-    throw ContractFailed::newFromBadValue(null, '\$arg1 cannot be null');
+    $arg1 = null;
+    throw ContractFailed::newFromVar(
+        $arg1,
+        '$arg1',
+        [ 'reason' => 'cannot be null']
+    );
 }
-catch(DefensiveException $e) {
+catch(ContractsException $e) {
     // ...
 }
 ```
@@ -123,7 +158,12 @@ use GanbaroDigital\Contracts\V1\Exceptions\ContractFailed;
 use GanbaroDigital\HttpStatus\Interfaces\HttpRuntimeErrorException;
 
 try {
-    throw ContractFailed::newFromBadValue(null, '\$arg1 cannot be null');
+    $arg1 = null;
+    throw ContractFailed::newFromVar(
+        $arg1,
+        '$arg1',
+        [ 'reason' => 'cannot be null']
+    );
 }
 catch(HttpRuntimeErrorException $e) {
     $httpStatus = $e->getHttpStatus();
@@ -137,7 +177,12 @@ use GanbaroDigital\Contracts\V1\Exceptions\ContractFailed;
 use GanbaroDigital\HttpStatus\Interfaces\HttpException;
 
 try {
-    throw ContractFailed::newFromBadValue(null, '\$arg1 cannot be null');
+    $arg1 = null;
+    throw ContractFailed::newFromVar(
+        $arg1,
+        '$arg1',
+        [ 'reason' => 'cannot be null']
+    );
 }
 catch(HttpException $e) {
     $httpStatus = $e->getHttpStatus();
@@ -151,7 +196,12 @@ use GanbaroDigital\Contracts\V1\Exceptions\ContractFailed;
 use RuntimeException;
 
 try {
-    throw ContractFailed::newFromBadValue(null, '\$arg1 cannot be null');
+    $arg1 = null;
+    throw ContractFailed::newFromVar(
+        $arg1,
+        '$arg1',
+        [ 'reason' => 'cannot be null']
+    );
 }
 catch(RuntimeException $e) {
     // ...
@@ -169,7 +219,7 @@ Here is the contract for this class:
      [x] is HttpRuntimeErrorException
      [x] maps to HTTP 500 UnexpectedError
      [x] is RuntimeException
-     [x] Can create from bad value
+     [x] Can create from PHP variable
 
 Class contracts are built from this class's unit tests.
 

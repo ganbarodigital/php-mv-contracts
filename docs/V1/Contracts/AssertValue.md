@@ -41,24 +41,22 @@ class AssertValue implements Requirement
      *
      * @param  boolean $expr
      *         the expression we use to check $value
-     * @param  string|null $reason
+     * @param  string $reason
      *         the reason why $expr must be true
      * @return Requirement
      *         a requirement that can be enforced
      */
-    public static function apply($expr, $reason = null);
+    public static function apply($expr, $reason = "see source code for details");
 
     /**
      * constructor
      *
      * @param  boolean $expr
      *         the expression we are checking
-     * @param  string|null $reason
+     * @param  string $reason
      *         the reason why $expr must be true
-     * @return boolean
-     *         TRUE on success
      */
-    public function __construct($expr, $reason = null);
+    public function __construct($expr, $reason);
 
     /**
      * check that an expression is true ... and if it is not, throw an
@@ -111,15 +109,29 @@ $data = 2;
 AssertValue::apply($data > 4)->to($data);
 ```
 
+You can supply a string to explain the contract. This will be included in the `ContractFailed` exception, and should appear in your app's logs.
+
+```php
+use GanbaroDigital\Contracts\V1\Contracts\AssertValue;
+
+// throws a ContractFailed exception
+$data = 2;
+AssertValue::apply($data > 4, "must be greater than 4")->to($data, '$data');
+```
+
 ## Class Contract
 
 Here is the contract for this class:
 
-    GanbaroDigital\Contracts\V1\Contracts\AssertValue
+    GanbaroDigitalTest\Contracts\V1\Contracts\AssertValue
      [x] Can instantiate
      [x] is Requirement
      [x] Returns true if expression is true
      [x] Throws exception if expression is not true
+     [x] Failed assert provides location of broken contract
+     [x] Failed assert provides contract terms
+     [x] Failed assert falls back to default contract terms
+     [x] Failed assert provides rejected value
 
 Class contracts are built from this class's unit tests.
 

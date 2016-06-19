@@ -61,60 +61,19 @@ class ContractFailed
     // we map onto a HTTP 500 error
     use UnexpectedErrorStatusProvider;
 
-    /**
-     * create a new exception when a value fails a contract
-     *
-     * @param  mixed $value
-     *         the value that failed the contract
-     * @param  string|null $reason
-     *         details about the contract that failed
-     * @return ContractFailed
-     */
-    public static function newFromBadValue($value, $reason = null)
-    {
-        // who called us?
-        $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
-        $callerFilter = self::buildCallerFilter();
-        $caller = FilterCodeCaller::from($trace, $callerFilter);
+    // format string for final output
+    static protected $defaultFormat = "contract failed; %reason\$s";
 
-        // what type of data is $value?
-        $valueType = GetPrintableType::of($value);
+    // default values for extra data
+    static protected $defaultExtras = [
+        'reason' => 'see source code for details',
+    ];
 
-        $msg = "contract failed at %callerName\$s; failed value is: %value\$s";
-        if ($reason !== null) {
-            $msg .= "; contract is: %reason\$s";
-        }
-        $exceptionData = [
-            "caller" => $caller,
-            "callerName" => $caller->getCaller(),
-            "value" => $value,
-            "valueType" => $valueType,
-            "reason" => $reason,
-        ];
-        return new static($msg, $exceptionData);
-    }
-
-    /**
-     * what do we want to filter from our stack trace?
-     *
-     * @return array
-     */
-    private static function buildCallerFilter()
-    {
-        // we start with whatever the default list is
-        $callerFilter = FilterCodeCaller::$DEFAULT_PARTIALS;
-
-        // we want the exception's error message to refer to whatever
-        // function / method is trying to enforce contracts
-        //
-        // the best way to do this is to filter out all of our classes
-        $callerFilter[] = self::class;
-        $callerFilter[] = static::class;
-        $callerFilter[] = AssertValue::class;
-        $callerFilter[] = CheckContracts::class;
-        $callerFilter[] = Contracts::class;
-
-        // all done
-        return $callerFilter;
-    }
+    // default filter for the call stack
+    static protected $defaultCallStackFilter = [
+        __CLASS__,
+        AssertValue::class,
+        CheckContracts::class,
+        Contracts::class,
+    ];
 }

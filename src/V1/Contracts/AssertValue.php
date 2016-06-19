@@ -67,7 +67,7 @@ class AssertValue implements Requirement
     /**
      * an explanation of why the assertion failed
      *
-     * @var string|null
+     * @var string
      */
     private $reason;
 
@@ -76,12 +76,12 @@ class AssertValue implements Requirement
      *
      * @param  boolean $expr
      *         the expression we use to check $value
-     * @param  string|null $reason
+     * @param  string $reason
      *         the reason why $expr must be true
      * @return Requirement
      *         a requirement that can be enforced
      */
-    public static function apply($expr, $reason = null)
+    public static function apply($expr, $reason = "see source code for details")
     {
         return new static($expr, $reason);
     }
@@ -91,12 +91,12 @@ class AssertValue implements Requirement
      *
      * @param  boolean $expr
      *         the expression we are checking
-     * @param  string|null $reason
+     * @param  string $reason
      *         the reason why $expr must be true
      * @return boolean
      *         TRUE on success
      */
-    public function __construct($expr, $reason = null)
+    public function __construct($expr, $reason)
     {
         $this->expr = $expr;
         $this->reason = $reason;
@@ -115,10 +115,11 @@ class AssertValue implements Requirement
      */
     public function to($data, $fieldOrVarName = 'value')
     {
-        if ($this->expr !== true) {
-            throw ContractFailed::newFromBadValue($data, $this->reason);
+        if ($this->expr === true) {
+            return true;
         }
 
-        return true;
+        // if we get here, then this assertion has failed
+        throw ContractFailed::newFromVar($data, $fieldOrVarName, ['reason' => $this->reason]);
     }
 }

@@ -96,7 +96,7 @@ class ContractsExceptionsTest extends PHPUnit_Framework_TestCase
     /**
      * @covers ::offsetGet
      */
-    public function test_has_factory_for_ContractFailed_newFromBadValue()
+    public function test_has_factory_for_ContractFailed_newFromVar()
     {
         // ----------------------------------------------------------------
         // setup your test
@@ -106,7 +106,7 @@ class ContractsExceptionsTest extends PHPUnit_Framework_TestCase
         // ----------------------------------------------------------------
         // perform the change
 
-        $factory = $unit['ContractFailed::newFromBadValue'];
+        $factory = $unit['ContractFailed::newFromVar'];
         $exception = $factory(null, '\$data');
 
         // ----------------------------------------------------------------
