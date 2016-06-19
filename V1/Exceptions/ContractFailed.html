@@ -83,16 +83,36 @@ class ContractFailed
     // we map onto HTTP 500
     use UnexpectedErrorStatusProvider;
 
+    // default values for extra data
+    static protected $defaultExtras = [
+        'reason' =&gt; 'no reason provided',
+    ];
+
     /**
      * create a new exception when a value fails a contract
      *
-     * @param  mixed $value
-     *         the value that failed the contract
-     * @param  string|null $reason
-     *         details about the contract that failed
+     * @param  mixed $fieldOrVar
+     *         the value that you're throwing an exception about
+     * @param  string $fieldOrVarName
+     *         the name of the value in your code
+     * @param  array $extraData
+     *         extra data that you want to include in your exception
+     * @param  int|null $typeFlags
+     *         do we want any extra type information in the final
+     *         exception message?
+     * @param  array $callStackFilter
+     *         are there any namespaces we want to filter out of
+     *         the call stack?
      * @return ContractFailed
+     *         an fully-built exception for you to throw
      */
-    public static function newFromBadValue($value, $reason = null);
+    public static function newFromVar(
+        $fieldOrVar,
+        $fieldOrVarName,
+        array $extraData = [],
+        $typeFlags = null,
+        array $callStackFilter = []
+    );
 
     /**
      * what was the data that we used to create the printable message?
@@ -117,29 +137,44 @@ class ContractFailed
 }</code></pre>
 <h2 id="how-to-use">How To Use</h2>
 <h3 id="creating-exceptions-to-throw">Creating Exceptions To Throw</h3>
-<p>Call <code>ContractFailed::newFromBadValue()</code> to create a new throwable exception:</p>
+<p>Call <code>ContractFailed::newFromVar()</code> to create a new throwable exception:</p>
 <pre><code class="language-php">use GanbaroDigital\Contracts\V1\Exceptions\ContractFailed;
 
-throw ContractFailed::newFromBadValue(null, '\$arg1 cannot be null');</code></pre>
+$arg1 = null;
+throw ContractFailed::newFromVar(
+    $arg1,
+    '$arg1',
+    [ 'reason' =&gt; 'cannot be null']
+);</code></pre>
 <h3 id="catching-the-exception">Catching The Exception</h3>
 <p><code>ContractFailed</code> implements a rich set of classes and interfaces. You can use any of these to <code>catch</code> this exception.</p>
 <pre><code class="language-php">// example 1: we catch only ContractFailed exceptions
 use GanbaroDigital\Contracts\V1\Exceptions\ContractFailed;
 
 try {
-    throw ContractFailed::newFromBadValue(null, '\$arg1 cannot be null');
+    $arg1 = null;
+    throw ContractFailed::newFromVar(
+        $arg1,
+        '$arg1',
+        [ 'reason' =&gt; 'cannot be null']
+    );
 }
 catch(BadRequirements $e) {
     // ...
 }</code></pre>
 <pre><code class="language-php">// example 2: catch all exceptions thrown by the Contracts Library
 use GanbaroDigital\Contracts\V1\Exceptions\ContractFailed;
-use GanbaroDigital\Contracts\V1\Exceptions\DefensiveException;
+use GanbaroDigital\Contracts\V1\Exceptions\ContractsException;
 
 try {
-    throw ContractFailed::newFromBadValue(null, '\$arg1 cannot be null');
+    $arg1 = null;
+    throw ContractFailed::newFromVar(
+        $arg1,
+        '$arg1',
+        [ 'reason' =&gt; 'cannot be null']
+    );
 }
-catch(DefensiveException $e) {
+catch(ContractsException $e) {
     // ...
 }</code></pre>
 <pre><code class="language-php">// example 3: catch all exceptions where there was an unexpected problem
@@ -148,7 +183,12 @@ use GanbaroDigital\Contracts\V1\Exceptions\ContractFailed;
 use GanbaroDigital\HttpStatus\Interfaces\HttpRuntimeErrorException;
 
 try {
-    throw ContractFailed::newFromBadValue(null, '\$arg1 cannot be null');
+    $arg1 = null;
+    throw ContractFailed::newFromVar(
+        $arg1,
+        '$arg1',
+        [ 'reason' =&gt; 'cannot be null']
+    );
 }
 catch(HttpRuntimeErrorException $e) {
     $httpStatus = $e-&gt;getHttpStatus();
@@ -159,7 +199,12 @@ use GanbaroDigital\Contracts\V1\Exceptions\ContractFailed;
 use GanbaroDigital\HttpStatus\Interfaces\HttpException;
 
 try {
-    throw ContractFailed::newFromBadValue(null, '\$arg1 cannot be null');
+    $arg1 = null;
+    throw ContractFailed::newFromVar(
+        $arg1,
+        '$arg1',
+        [ 'reason' =&gt; 'cannot be null']
+    );
 }
 catch(HttpException $e) {
     $httpStatus = $e-&gt;getHttpStatus();
@@ -170,7 +215,12 @@ use GanbaroDigital\Contracts\V1\Exceptions\ContractFailed;
 use RuntimeException;
 
 try {
-    throw ContractFailed::newFromBadValue(null, '\$arg1 cannot be null');
+    $arg1 = null;
+    throw ContractFailed::newFromVar(
+        $arg1,
+        '$arg1',
+        [ 'reason' =&gt; 'cannot be null']
+    );
 }
 catch(RuntimeException $e) {
     // ...
@@ -184,7 +234,7 @@ catch(RuntimeException $e) {
  [x] is HttpRuntimeErrorException
  [x] maps to HTTP 500 UnexpectedError
  [x] is RuntimeException
- [x] Can create from bad value</code></pre>
+ [x] Can create from PHP variable</code></pre>
 <p>Class contracts are built from this class's unit tests.</p>
 <div class="callout success">
 Future releases of this class will not break this contract.
